@@ -7,13 +7,13 @@
 #'
 #'
 #'
-#' @name pooling_experiment
+#' @name Pooling_Experiment
 #' @author Celia Tsapalou, Wolfram Hoeps
 #'
 #' Function \code{generate_random_cells} simulates the amount of cells successfully extracted from each pool, assuming 10000 cells in each sample.
-#' @param all_samples the total number of samples used in the pooling experiment.
-#' @param samples_per_pool number of samples to be used in each one of the pools.
-#' @param well define capacity of the cell culture dish.
+#' @param all_samples The total number of samples used in the pooling experiment.
+#' @param samples_per_pool Number of samples to be divided in each one of the pools.
+#' @param well The capacity of the cell culture dish.
 #' @export
 #'
 
@@ -21,17 +21,21 @@
 generate_random_cells <- function(all_samples, samples_per_pool, well) {
 
   pools = all_samples / samples_per_pool
+  
+  # Dropout Rate: 50% of the cells are not successfully pooled
   dropout<-c(1/2)
+ 
+  # Total number of cells for each individual of the experiment
   cells<-10000
   
   
-  # make an empty list to name all the cell counts from all the samples
+  # Make an empty list to name all the Cell Counts for the Total Number of Samples
   
   cell_list <- matrix(0, samples_per_pool*cells, 3)
   colnames(cell_list)<-c('sample', 'cell', 'name')
   
   
-  #Generate the list of names for the 10.000 cells in each sample
+  # Generate the list of names for the 10.000 cells  each sample
   
   for (i in 1:samples_per_pool) {
     for (j in 1:cells){ #10000 cells per pool
@@ -45,27 +49,30 @@ generate_random_cells <- function(all_samples, samples_per_pool, well) {
   
   random <- data.frame(matrix(vector(),0,1, dimnames=list(c(), c('cell_count'))), stringsAsFactors = F)
   
-  #Run it for all the pools
+  # Run it for the total number of pools
   
   for (p in 1:pools) {
       
-    #Make a list with the cells chosen after Random Sampling from the total samples (samples_per_pool*10.000)
-    #sample(x, size, replace = FALSE, prob = NULL) 
+    # Make a list with the cells extracted from each individual after Random Sampling (samples_per_pool * 10.000)
+    # sample(x, size, replace = FALSE, prob = NULL) 
       
     cell_list_sort<-cell_list[sample(c(1:(samples_per_pool*cells)), (well)),]
     
     
-    # Assume Dropout and keep only the alive cells from the well 
+    # Assume 50% dropout rate and keep only the alive cells from each well for the next steps 
+    
     cell_list_sort_live <- cell_list_sort[sample(c(1:well), well*dropout),]
     
     
-    # Create empty matrix for plot only for the pooled samples
-    cell_number_bar <- matrix(0, samples_per_pool, 1) #matrix with 0 values, 40 rows, 1 column
+    # Create empty matrix 
+    
+    cell_number_bar <- matrix(0, samples_per_pool, 1) 
     rownames(cell_number_bar) <- paste0('pool', p, '_sample_', c(1:samples_per_pool))
     colnames(cell_number_bar) <- 'cell_count'
      
      
-    #Alive cells in the samples_per_pool samples
+    # Alive cells in the samples_per_pool samples
+    
     for (k in 1:samples_per_pool){
       cell_number_bar[k,1] <-sum(cell_list_sort_live[,1]==k)
     }
@@ -84,14 +91,14 @@ generate_random_cells <- function(all_samples, samples_per_pool, well) {
 
 
 
-#Size=number of cells
-#Number of successes : from 0 to as many cells in the well*dropout
-#Probability= 1/total number of samples in the pool
+# Size = Total Number of cells
+# Number of Successes = from 0 up to the total number of alive cells in each well after dropout
+# Probability = 1/Total Number of Samples in the Pool
 
 #' Function \code{generate_distribution} generates the binomial distribution of the probability of a certain number of successfully extracted cells (x) in a certain number of trials (size) where the probability of success on each trial is fixed (prob).
-#' @param all_samples the total number of samples used in the pooling experiment.
-#' @param samples_per_pool number of samples to be used in each one of the pools.
-#' @param well define capacity of the cell culture dish.
+#' @param all_samples The total number of samples used in the pooling experiment.
+#' @param samples_per_pool Number of samples to be divided in each one of the pools.
+#' @param well The capacity of the cell culture dish.
 #' @export
 #'
 
@@ -115,10 +122,10 @@ generate_distribution <- function(all_samples, samples_per_pool, well) {
 }
 
 #' Function \code{plot_cells} plots and saves the output of the simulation case and the binomial distribution.
-#' @param all_samples the total number of samples used in the pooling experiment.
-#' @param samples_per_pool number of samples to be used in each one of the pools.
-#' @param well define capacity of the cell culture dish.
-#' @param outfile define name of the output plot.
+#' @param all_samples The total number of samples used in the pooling experiment.
+#' @param samples_per_pool Number of samples to be divided in each one of the pools.
+#' @param well The capacity of the cell culture dish.
+#' @param outfile Define the name of the output plot.
 #' @export
 #'
 
