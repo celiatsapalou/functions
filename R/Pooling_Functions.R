@@ -9,8 +9,6 @@
 #'
 #' @name pooling_experiment
 #' @author Celia Tsapalou, Wolfram Hoeps
-
-
 #'
 #' Function \code{generate_random_cells} simulates the amount of cells successfully extracted from each pool, assuming 10000 cells in each sample.
 #' @param all_samples the total number of samples used in the pooling experiment.
